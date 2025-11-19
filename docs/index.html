@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shawn Sammartano | Client Success, AI, & Data Analytics</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#0f172a',
+                        card: '#1e293b',
+                        accent: '#0ea5e9', // Sky 500
+                        accentHover: '#38bdf8',
+                        textPrimary: '#f8fafc',
+                        textSecondary: '#94a3b8',
+                        success: '#10b981'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ea5e9;
+        }
+
+        /* Timeline Line */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, #0ea5e9, #10b981, #0ea5e9);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line::before {
+                left: 20px;
+            }
+        }
+
+        /* Card Hover Glow */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* Animated Background Mesh */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08), transparent 25%),
+                        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
+        }
+
+        /* Hero Glitch Effect for Name */
+        .glitch-text {
+            position: relative;
+        }
+        
+        .skill-bar-fill {
+            width: 0%; /* Start at 0 for animation */
+            transition: width 1.5s ease-out;
+        }
+        
+        /* Code Syntax Highlighting for Navbar */
+        .object { color: #9CDCFE; }       /* Light Blue for object */
+        .method { color: #DCDCAA; }       /* Yellow for method */
+        .parameter { color: #4EC9B0; }    /* Orange for parameter */
+	/*.punctuation { color: #D4D4D4; }  /* Light Grey for punctuation */ */
+	*.punctuation { color: #FFFFFF; }  /* White for punctuation */
+        
+        /* Tooltip for Tech Stack */
+        .tech-icon {
+            position: relative;
+            display: inline-block;
+        }
+        .tech-icon:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            border: 1px solid #334155;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+            pointer-events: none;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-lg md:text-xl font-bold font-mono tracking-tighter">
+                <span class="object">Shawn_Sammartano</span><span class="method">.query</span><span class="punctuation">(</span><span class="parameter">Resume</span><span class="punctuation">)</span><span 		class="method">.all</span><span class="punctuation">()</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-semibold text-textSecondary">
+                <a href="#about" class="hover:text-accent transition-colors">ABOUT</a>
+                <a href="#stats" class="hover:text-accent transition-colors">METRICS</a>
+                <a href="#experience" class="hover:text-accent transition-colors">EXPERIENCE</a>
+                <a href="#skills" class="hover:text-accent transition-colors">SKILLS</a>
+                <a href="#education" class="hover:text-accent transition-colors">EDUCATION</a>
+            </div>
+            <a href="mailto:Shawn.Sammartano@gmail.com" class="px-5 py-2 rounded-full border border-accent text-accent hover:bg-accent hover:text-white transition-all duration-300 text-sm 	    font-bold">
+                HIRE ME
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center relative pt-20" id="home">
+        <div class="container mx-auto px-6 text-center z-10">
+            <div class="hero-content opacity-0 translate-y-10">
+                <div class="inline-block px-4 py-1 mb-6 rounded-full bg-card border border-gray-700 text-accent text-sm font-mono tracking-wide">
+                    ACCOUNT MANAGEMENT WITH AI & DATA ANALYTICS EXPERTISE
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
+                    Shawn <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-success">Sammartano</span>
+                </h1>
+                <p class="text-xl text-textSecondary max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Driving retention and revenue growth through AI and data-driven strategies. 
+                    Blending <span class="text-white font-semibold">Customer Success Operations</span> 
+		    while leveraging <span class="text-white font-semibold">AI Tools</span> (Claude, CoPilot, Gemini, NotebookLM) 
+		    and <span class="text-white font-semibold">Data Analytics</span> (SQL, Python, R, Tableau, RStudio).
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#experience" class="px-8 py-4 bg-accent text-white rounded-lg font-bold hover:bg-accentHover transition-all shadow-lg shadow-cyan-500/20">
+                        View Portfolio
+                    </a>
+                    <a href="mailto:Shawn.Sammartano@gmail.com" class="px-8 py-4 bg-card border border-gray-700 text-white rounded-lg font-bold hover:border-accent transition-all">
+                        Contact Me
+                    </a>
+                </div>
+                
+                <!-- Quick Tech Stack Icons -->
+                <div class="mt-16 flex flex-wrap justify-center gap-6 text-3xl text-gray-600">
+                    <div class="tech-icon hover:text-[#00A1E0] transition-colors cursor-help" data-title="Salesforce">
+                        <i class="fab fa-salesforce"></i>
+                    </div>
+                    <div class="tech-icon hover:text-blue-400 transition-colors cursor-help" data-title="Microsoft Azure">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                    <div class="tech-icon hover:text-yellow-500 transition-colors cursor-help" data-title="SQL">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="tech-icon hover:text-blue-300 transition-colors cursor-help" data-title="R Language">
+                        <i class="fab fa-r-project"></i>
+                    </div>
+                    <div class="tech-icon hover:text-blue-500 transition-colors cursor-help" data-title="Python">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <div class="tech-icon hover:text-orange-500 transition-colors cursor-help" data-title="Tableau/Analytics">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="tech-icon hover:text-green-400 transition-colors cursor-help" data-title="Google BigQuery">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="tech-icon hover:text-teal-400 transition-colors cursor-help" data-title="OpenAI ChatGPT">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="tech-icon hover:text-purple-400 transition-colors cursor-help" data-title="Anthropic Claude">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="tech-icon hover:text-blue-600 transition-colors cursor-help" data-title="Microsoft CoPilot">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <div class="tech-icon hover:text-blue-400 transition-colors cursor-help" data-title="Google Gemini">
+                        <i class="fas fa-star-of-life"></i>
+                    </div>
+                    <div class="tech-icon hover:text-white transition-colors cursor-help" data-title="Grok">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="tech-icon hover:text-red-500 transition-colors cursor-help" data-title="Databricks">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="tech-icon hover:text-sky-300 transition-colors cursor-help" data-title="SaaS">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-textSecondary">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Impact Metrics / Stats -->
+    <section id="stats" class="py-20 bg-card border-y border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="stat-item opacity-0">
+                    <div class="text-4xl md:text-5xl font-bold text-accent mb-2 counter" data-target="28">0</div>
+                    <div class="text-sm text-textSecondary font-mono uppercase">Portfolio Size Managed</div>
+                </div>
+                <div class="stat-item opacity-0">
+                    <div class="text-4xl md:text-5xl font-bold text-success mb-2 counter" data-target="90">0</div>
+                    <div class="text-sm text-textSecondary font-mono uppercase">Retention Rate</div>
+                </div>
+                <div class="stat-item opacity-0">
+                    <div class="text-4xl md:text-5xl font-bold text-purple-500 mb-2 counter" data-target="10">0</div>
+                    <div class="text-sm text-textSecondary font-mono uppercase">Years FinTech Experience</div>
+                </div>
+                <div class="stat-item opacity-0">
+                    <div class="text-4xl md:text-5xl font-bold text-yellow-500 mb-2 counter" data-target="6">0</div>
+                    <div class="text-sm text-textSecondary font-mono uppercase">Professional Certifications</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About & Core Competencies -->
+    <section id="about" class="py-24 relative">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="about-text opacity-0 translate-x-[-50px]">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">About Me</h2>
+                    <p class="text-textSecondary mb-6 leading-relaxed">
+                        I am a results-driven Client Success Manager with over 7 years of experience in B2B SaaS and financial services. 
+                        What sets me apart is my ability to leverage <strong class="text-accent">artificial intelligence tools</strong> and <strong class="text-accent">advanced data 				analytics</strong> to drive customer retention and revenue growth.
+                    </p>
+                    <p class="text-textSecondary mb-8 leading-relaxed">
+                        Currently managing a $28M portfolio at FIS Global, I use ai tools including CoPilot, predict churn, and identify expansion opportunities. 
+                        I combine strategic account planning with technical proficiency to align service delivery with client business objectives.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-3 py-1 rounded-md bg-gray-800 text-xs font-mono text-accent border border-gray-700">Experienced Relationship Management</span>
+                        <span class="px-3 py-1 rounded-md bg-gray-800 text-xs font-mono text-accent border border-gray-700">Google Data Analytics Certified</span>
+                        <span class="px-3 py-1 rounded-md bg-gray-800 text-xs font-mono text-accent border border-gray-700">AI Certified</span>
+                    </div>
+                </div>
+                
+                <!-- Skills Grid -->
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Tech Skill -->
+                    <div class="skill-group opacity-0 translate-x-[50px]">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-sm">Customer Success Operations</span>
+                            <span class="text-accent text-sm font-mono">Advanced</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-accent skill-bar-fill" data-width="75%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-group opacity-0 translate-x-[50px]">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-sm">Data Analytics (SQL, Python, R, BigQuery, Tableau)</span>
+                            <span class="text-accent text-sm font-mono">Moderate</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 skill-bar-fill" data-width="25%"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-group opacity-0 translate-x-[50px]">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-sm">CRM (Salesforce, ServiceNow)</span>
+                            <span class="text-accent text-sm font-mono">Intermediate</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 skill-bar-fill" data-width="50%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-group opacity-0 translate-x-[50px]">
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-sm">AI Tools (Copilot, Claude, Gemini, Grok, Perplexity, NotebookLM, etc)</span>
+                            <span class="text-accent text-sm font-mono">Advanced</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-success skill-bar-fill" data-width="90%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="py-24 bg-[#0b1120] relative">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">Professional Journey</h2>
+            
+            <div class="relative timeline-line max-w-4xl mx-auto">
+                
+                <!-- Item 1 -->
+                <div class="mb-12 md:grid md:grid-cols-2 gap-8 items-center timeline-item">
+                    <div class="hidden md:block text-right pr-8">
+                        <h3 class="text-xl font-bold text-white">Client Success Manager I</h3>
+                        <div class="text-accent font-mono text-sm mb-2">Jun 2024 – Present</div>
+                        <p class="text-gray-400 text-sm">FIS Global</p>
+                    </div>
+                    
+                    <!-- Dot -->
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-accent rounded-full border-4 border-[#0b1120] z-10"></div>
+                    
+                    <div class="pl-8 md:pl-0 md:col-start-2 md:pl-8 pb-8 md:pb-0 border-l-2 md:border-l-0 border-gray-800 md:border-transparent">
+                        <div class="md:hidden mb-2">
+                            <h3 class="text-xl font-bold text-white">Client Success Manager I</h3>
+                            <div class="text-accent font-mono text-sm">Jun 2024 – Present | FIS Global</div>
+                        </div>
+                        <div class="glass-card p-6 rounded-xl">
+                            <ul class="space-y-2 text-sm text-textSecondary list-disc list-inside">
+                                <li>Manage <strong>$28M portfolio</strong> (12 clients) with $22.7M ARR across Credit Unions & Healthcare.</li>
+                                <li>Drive retention through strategic account plans and cross-functional collaboration.</li>
+                                <li>Monitor KPIs (satisfaction, retention) to drive data-informed decisions.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="mb-12 md:grid md:grid-cols-2 gap-8 items-center timeline-item">
+                    <div class="order-2 md:order-1 pl-8 md:pl-0 pr-0 md:pr-8 pb-8 md:pb-0 border-l-2 md:border-l-0 border-gray-800 md:border-transparent">
+                        <div class="md:hidden mb-2">
+                            <h3 class="text-xl font-bold text-white">Account Executive</h3>
+                            <div class="text-accent font-mono text-sm">May 2023 – Mar 2024 | Fiserv Inc.</div>
+                        </div>
+                        <div class="glass-card p-6 rounded-xl">
+                            <ul class="space-y-2 text-sm text-textSecondary list-disc list-inside">
+                                <li>Exceeded <strong>$1.5M annual sales quota</strong> managing 80-90 credit union clients.</li>
+                                <li>Utilized Salesforce CRM to identify and capitalize on cross-selling opportunities.</li>
+                                <li>Managed full sales cycle from value prop to contract negotiation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-success rounded-full border-4 border-[#0b1120] z-10 top-0 md:top-auto"></div>
+                    
+                    <div class="hidden md:block order-1 md:order-2 pl-8">
+                        <h3 class="text-xl font-bold text-white">Account Executive</h3>
+                        <div class="text-accent font-mono text-sm mb-2">May 2023 – Mar 2024</div>
+                        <p class="text-gray-400 text-sm">Fiserv Inc.</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="mb-12 md:grid md:grid-cols-2 gap-8 items-center timeline-item">
+                    <div class="hidden md:block text-right pr-8">
+                        <h3 class="text-xl font-bold text-white">Client Relationship Manager II</h3>
+                        <div class="text-accent font-mono text-sm mb-2">Oct 2021 – May 2023</div>
+                        <p class="text-gray-400 text-sm">FIS Global</p>
+                    </div>
+                    
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-purple-500 rounded-full border-4 border-[#0b1120] z-10"></div>
+                    
+                    <div class="pl-8 md:pl-0 md:col-start-2 md:pl-8 pb-8 md:pb-0 border-l-2 md:border-l-0 border-gray-800 md:border-transparent">
+                        <div class="md:hidden mb-2">
+                            <h3 class="text-xl font-bold text-white">Client Relationship Manager II</h3>
+                            <div class="text-accent font-mono text-sm">Oct 2021 – May 2023 | FIS Global</div>
+                        </div>
+                        <div class="glass-card p-6 rounded-xl">
+                            <ul class="space-y-2 text-sm text-textSecondary list-disc list-inside">
+                                <li>Oversaw full <strong>P&L responsibility</strong> for 15-20 client accounts.</li>
+                                <li>Negotiated contracts and SOWs to optimize financial performance.</li>
+                                <li>Aligned IT service delivery with ITIL framework standards.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Item 4 -->
+                 <div class="mb-12 md:grid md:grid-cols-2 gap-8 items-center timeline-item">
+                    <div class="order-2 md:order-1 pl-8 md:pl-0 pr-0 md:pr-8 pb-8 md:pb-0 border-l-2 md:border-l-0 border-gray-800 md:border-transparent">
+                        <div class="md:hidden mb-2">
+                            <h3 class="text-xl font-bold text-white">Client Relationship Manager I</h3>
+                            <div class="text-accent font-mono text-sm">Jan 2020 – Sep 2021 | FIS Global</div>
+                        </div>
+                        <div class="glass-card p-6 rounded-xl">
+                            <ul class="space-y-2 text-sm text-textSecondary list-disc list-inside">
+                                <li>Capitalized on upselling/cross-selling within IT service offerings.</li>
+                                <li>Maintained high satisfaction scores and ensured SLA compliance.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-gray-500 rounded-full border-4 border-[#0b1120] z-10 top-0 md:top-auto"></div>
+                    
+                    <div class="hidden md:block order-1 md:order-2 pl-8">
+                        <h3 class="text-xl font-bold text-white">Client Relationship Manager I</h3>
+                        <div class="text-accent font-mono text-sm mb-2">Jan 2020 – Sep 2021</div>
+                        <p class="text-gray-400 text-sm">FIS Global</p>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="mb-12 md:grid md:grid-cols-2 gap-8 items-center timeline-item">
+                    <div class="hidden md:block text-right pr-8">
+                        <h3 class="text-xl font-bold text-white">Client Services Manager II</h3>
+                        <div class="text-accent font-mono text-sm mb-2">May 2018 – Jan 2020</div>
+                        <p class="text-gray-400 text-sm">FIS Global</p>
+                    </div>
+                    
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-gray-500 rounded-full border-4 border-[#0b1120] z-10"></div>
+                    
+                    <div class="pl-8 md:pl-0 md:col-start-2 md:pl-8 pb-8 md:pb-0 border-l-2 md:border-l-0 border-gray-800 md:border-transparent">
+                        <div class="md:hidden mb-2">
+                            <h3 class="text-xl font-bold text-white">Client Services Manager II</h3>
+                            <div class="text-accent font-mono text-sm">May 2018 – Jan 2020 | FIS Global</div>
+                        </div>
+                        <div class="glass-card p-6 rounded-xl">
+                            <ul class="space-y-2 text-sm text-textSecondary list-disc list-inside">
+                                <li>Spearheaded rollout of new remote IT support tier.</li>
+                                <li>Managed service desk operations and engineer workflows.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section (New) -->
+    <section id="skills" class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Technical & Professional Skills</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Operations -->
+                <div class="glass-card p-6 rounded-xl skill-box opacity-0 translate-y-10">
+                    <h3 class="text-accent text-xl font-bold mb-4 border-b border-gray-700 pb-2">Success Operations</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Customer Success Operations</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Revenue Operations</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Customer Health Scoring</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Churn Prediction</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Strategic Account Planning</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">P&L Management</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Account Management</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">C-Level Engagement</span>
+                    </div>
+                </div>
+
+                <!-- Data & BI -->
+                <div class="glass-card p-6 rounded-xl skill-box opacity-0 translate-y-10">
+                    <h3 class="text-purple-500 text-xl font-bold mb-4 border-b border-gray-700 pb-2">Data & Analytics</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">SQL</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">R</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Python</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Tableau</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">BigQuery</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Google Sheets (Adv)</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Excel (Adv)</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Predictive Analytics</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Business Intelligence</span>
+                    </div>
+                </div>
+
+                <!-- Platforms & Frameworks -->
+                <div class="glass-card p-6 rounded-xl skill-box opacity-0 translate-y-10">
+                    <h3 class="text-success text-xl font-bold mb-4 border-b border-gray-700 pb-2">Platforms & Tech</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Salesforce CRM</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">ServiceNow</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">Azure Cloud</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">SaaS Metrics</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">ITIL Framework</span>
+                        <span class="px-3 py-1 bg-card border border-gray-700 rounded-full text-sm text-textSecondary">KPI Development</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Certifications -->
+    <section id="education" class="py-24 bg-[#0b1120]">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Education & Certifications</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Academic -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-semibold text-accent border-b border-gray-800 pb-4 mb-6">Academic Background</h3>
+                    
+                    <div class="glass-card p-6 rounded-lg border-l-4 border-accent">
+                        <h4 class="text-lg font-bold">Certificate of Completion, Computer Programming</h4>
+                        <p class="text-textSecondary">University of Phoenix</p>
+                        <p class="text-sm text-gray-500 font-mono mt-2">Jan 2015</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-lg border-l-4 border-accent">
+                        <h4 class="text-lg font-bold">Master of Arts</h4>
+                        <p class="text-textSecondary">BIOLA University</p>
+                        <p class="text-sm text-gray-500 font-mono mt-2">Sep 2012</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-lg border-l-4 border-accent">
+                        <h4 class="text-lg font-bold">Bachelor of Science</h4>
+                        <p class="text-textSecondary">Arizona Christian University</p>
+                        <p class="text-sm text-gray-500 font-mono mt-2">May 2006</p>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-semibold text-success border-b border-gray-800 pb-4 mb-6">Professional Certifications (select list)</h3>
+                    
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <i class="fab fa-google text-2xl text-white"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Google Data Analytics</h4>
+                                <p class="text-xs text-gray-500 font-mono">Oct 2025</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <i class="fab fa-microsoft text-2xl text-blue-400"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Microsoft Azure AI Essentials</h4>
+                                <p class="text-xs text-gray-500 font-mono">Sep 2025</p>
+                            </div>
+                        </div>
+			<div class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <!-- Replaced Font Awesome icon with official SVG logo -->
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="w-8 h-auto opacity-90">
+                            <div>
+                                <h4 class="font-bold text-sm">IBM AI Foundations for Business</h4>
+                                <p class="text-xs text-gray-500 font-mono">Sep 2025</p>
+                            </div>
+                        </div>
+
+
+                        <div class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <i class="fab fa-google text-2xl text-white"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Google Cloud Generative AI Leader</h4>
+                                <p class="text-xs text-gray-500 font-mono">Nov 2025</p>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <i class="fas fa-database text-2xl text-orange-500"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Databricks Fundamentals</h4>
+                                <p class="text-xs text-gray-500 font-mono">Nov 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20 text-center">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">Let's Collaborate</h2>
+            <p class="text-textSecondary max-w-xl mx-auto mb-10">
+                I'm ready to bring my expertise in Client Success, AI, and Data Analytics to your team!
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="mailto:Shawn.Sammartano@gmail.com" class="glass-card px-8 py-4 rounded-lg hover:bg-accent hover:text-white transition-all flex items-center gap-3 group">
+                    <i class="fas fa-envelope group-hover:scale-110 transition-transform"></i>
+                    Shawn.Sammartano@gmail.com
+                </a>
+                <a href="https://www.linkedin.com/in/shawnsammartano" target="_blank" class="glass-card px-8 py-4 rounded-lg hover:bg-[#0077b5] hover:text-white transition-all flex items-center gap-3 group">
+                    <i class="fab fa-linkedin group-hover:scale-110 transition-transform"></i>
+                    LinkedIn Profile
+                </a>
+                <div class="glass-card px-8 py-4 rounded-lg flex items-center gap-3 text-gray-400">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Dewey, AZ
+                </div>
+            </div>
+            
+            <footer class="mt-20 text-sm text-gray-600">
+                <p>&copy; 2025 Shawn Sammartano. Built with HTML, Tailwind & GSAP.</p>
+            </footer>
+        </div>
+    </section>
+
+    <script>
+        // Register ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Navbar Animation
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-bg/90', 'backdrop-blur-md', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-bg/90', 'backdrop-blur-md', 'shadow-lg');
+            }
+        });
+
+        // Hero Animation
+        const tl = gsap.timeline();
+        tl.to('.hero-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        // Stats Counter Animation
+        const stats = document.querySelectorAll('.stat-item');
+        stats.forEach((stat, index) => {
+            gsap.to(stat, {
+                scrollTrigger: {
+                    trigger: "#stats",
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                delay: index * 0.1
+            });
+        });
+
+        // Counter Logic - Refactored to avoid NaN issues with suffixes
+        gsap.utils.toArray(".counter").forEach(counter => {
+            const target = parseFloat(counter.getAttribute("data-target"));
+            
+            ScrollTrigger.create({
+                trigger: counter,
+                start: "top 85%",
+                once: true,
+                onEnter: () => {
+                    // Create a proxy object to tween the numeric value
+                    const proxy = { val: 0 };
+                    gsap.to(proxy, {
+                        val: target,
+                        duration: 2,
+                        ease: "power1.out",
+                        onUpdate: function() {
+                            const currentVal = Math.ceil(proxy.val);
+                            let formattedVal = currentVal;
+                            
+                            // Format based on target value to match design
+                            if(target === 28) formattedVal = '$' + currentVal + 'M';
+                            else if(target === 90) formattedVal = currentVal + '%';
+                            else if(target === 7) formattedVal = currentVal + '+';
+                            else if(target === 1.5) formattedVal = '$' + proxy.val.toFixed(1) + 'M';
+                            
+                            counter.innerHTML = formattedVal;
+                        }
+                    });
+                }
+            });
+        });
+
+        // About Section Slide In
+        gsap.to('.about-text', {
+            scrollTrigger: {
+                trigger: "#about",
+                start: "top 75%",
+            },
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power2.out"
+        });
+
+        // Skill Bars Animation
+        gsap.utils.toArray('.skill-group').forEach((group, i) => {
+            gsap.to(group, {
+                scrollTrigger: {
+                    trigger: "#about",
+                    start: "top 70%",
+                },
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                delay: i * 0.1,
+                onComplete: () => {
+                    const bar = group.querySelector('.skill-bar-fill');
+                    if(bar) bar.style.width = bar.getAttribute('data-width');
+                }
+            });
+        });
+        
+        // Skills Box Animation (New Section)
+        gsap.utils.toArray('.skill-box').forEach((box, i) => {
+            gsap.to(box, {
+                scrollTrigger: {
+                    trigger: "#skills",
+                    start: "top 75%",
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: i * 0.15,
+                ease: "back.out(1.2)"
+            });
+        });
+
+        // Timeline Items Animation
+        gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+            // Set initial state via CSS or JS
+            gsap.set(item, { opacity: 0, y: 50 });
+            
+            gsap.to(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 85%",
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            });
+        });
+
+        // Card Hover Effects
+        const cards = document.querySelectorAll('.glass-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                // Optional spotlight effect could go here
+            });
+        });
+    </script>
+</body>
+</html>
